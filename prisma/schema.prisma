@@ -83,6 +83,12 @@ model Rights {
   updatedAt DateTime @updatedAt
 }
 
+model VerifiedEmails {
+  id         Int     @id @default(autoincrement())
+  email      String
+  isVerified Boolean @default(false)
+}
+
 enum Role {
   USER
   ADMIN
