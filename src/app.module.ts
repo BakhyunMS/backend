@@ -7,8 +7,8 @@ import { AppService } from './app.service'
 import { AuthResolver } from './auth/auth.resolver'
 import { UsersResolver } from './users/users.resolver'
 import { UsersService } from './users/users.service'
-import { VerificationModule } from './verification/verification.module'
 import { JwtModule } from '@nestjs/jwt'
+import { AuthService } from './auth/auth.service'
 
 @Module({
   imports: [
@@ -27,10 +27,9 @@ import { JwtModule } from '@nestjs/jwt'
         secret: configService.get<string>('JWT_SECRET')
       }),
       inject: [ConfigService]
-    }),
-    VerificationModule
+    })
   ],
-  providers: [AppService, AuthResolver, UsersResolver, UsersService],
+  providers: [AppService, AuthResolver, UsersResolver, UsersService, AuthService],
   controllers: []
 })
 export class AppModule {}

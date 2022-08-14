@@ -1,16 +1,13 @@
 import { ArgsType, Field, ObjectType } from '@nestjs/graphql'
 
 @ArgsType()
-export class LoginRequest {
+export class SendCodeRequest {
   @Field()
-  email: string
-
-  @Field()
-  password: string
+  code: string
 }
 
 @ObjectType()
-export class LoginResponse {
+export class SendCodeResponse {
   @Field()
   ok: boolean
 
