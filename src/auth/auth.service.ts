@@ -65,7 +65,7 @@ export class AuthService {
         to: email,
         subject: '백현중학교 학생자치회 커뮤니티 인증',
         html: `
-        백현중학교 학생자치회 커뮤니티에서 발송된 이메일입니다.<br />아래 코드를 통해 인증 절차를 완료하여 주세요.<br />
+        백현중학교 학생자치회 커뮤니티에서 발송된 이메일입니다.<br />아래 코드를 통해 로그인을 완료하여 주세요.<br />
         <strong>${code}</strong><br/>
         해당 코드는 요청한 시간으로 부터 5분 뒤에 만료 됩니다.<br />만약 본인이 요청한 적이 없는 경우 해당 이메일을 무시해주세요.<br />
       `
@@ -78,6 +78,7 @@ export class AuthService {
   }
 
   async verifyCode(email: string, code: string): Promise<VerifyCodeResponse> {
+    const now = new Date(Date.now())
     const isCorrect = await prisma.verifiedEmails.findFirst({
       where: {
         email,
@@ -85,15 +86,16 @@ export class AuthService {
       }
     })
 
-    if (isCorrect) {
-      const token = await this.jwtService.sign(
-        { id: isCorrect.id },
-        this.configService.get('JWT_SECRET')
-      )
+    if (!isCorrect) return { ok: false, message: '코드가 일치하지 않습니다.' }
 
-      return { ok: true, token }
-    } else {
-      return { ok: false, message: '코드가 일치하지 않습니다.' }
-    }
+    if (isCorrect.expiresAt.getTime() < now.getTime())
+      return { ok: false, message: '코드가 만료되었습니다.' }
+
+    const token = await this.jwtService.sign(
+      { id: isCorrect.id },
+      this.configService.get('JWT_SECRET')
+    )
+
+    return { ok: true, message: '로그인 되었습니다.', token }
   }
 }
