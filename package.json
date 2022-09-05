@@ -1,10 +1,9 @@
 {
   "name": "community-backend",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "백현중학교 커뮤니티 백엔드",
   "author": "chul0721",
-  "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
