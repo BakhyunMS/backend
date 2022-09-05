@@ -3,7 +3,7 @@ import { ArgsType, Field, ObjectType } from '@nestjs/graphql'
 @ArgsType()
 export class SendCodeRequest {
   @Field()
-  code: string
+  email: string
 }
 
 @ObjectType()

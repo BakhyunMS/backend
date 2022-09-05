@@ -16,7 +16,4 @@ export class VerifyCodeResponse {
 
   @Field()
   message?: string
-
-  @Field()
-  token?: string
 }

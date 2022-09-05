@@ -16,4 +16,7 @@ export class LoginResponse {
 
   @Field()
   message?: string
+
+  @Field()
+  token?: string
 }
