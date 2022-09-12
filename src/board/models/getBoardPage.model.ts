@@ -1,5 +1,5 @@
 import { ArgsType, Field, ObjectType } from '@nestjs/graphql'
-import { Board } from '@prisma/client'
+import { Board, BoardType } from '@prisma/client'
 import { Response } from 'types/global'
 
 @ArgsType()
@@ -8,7 +8,7 @@ export class GetBoardPageRequest {
   page: number
 
   @Field()
-  type: string
+  type: BoardType
 }
 
 @ObjectType()
