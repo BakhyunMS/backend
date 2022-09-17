@@ -4,7 +4,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { GraphQLModule } from '@nestjs/graphql'
 import { JwtModule } from '@nestjs/jwt'
 import { join } from 'path'
-import { AppService } from './app.service'
 import { AuthResolver } from './auth/auth.resolver'
 import { AuthService } from './auth/auth.service'
 import { UsersResolver } from './users/users.resolver'
@@ -21,7 +20,11 @@ import { BoardService } from './board/board.service'
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      context: ({ req }) => ({ req })
+      context: ({ req, connection }) => {
+        return {
+          token: req ? req.headers['token'] : connection.context['token']
+        }
+      }
     }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -31,15 +34,7 @@ import { BoardService } from './board/board.service'
       inject: [ConfigService]
     })
   ],
-  providers: [
-    AppService,
-    AuthResolver,
-    UsersResolver,
-    UsersService,
-    AuthService,
-    BoardResolver,
-    BoardService
-  ],
+  providers: [AuthResolver, UsersResolver, UsersService, AuthService, BoardResolver, BoardService],
   controllers: []
 })
 export class AppModule {}
