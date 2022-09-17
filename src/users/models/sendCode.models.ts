@@ -1,16 +1,7 @@
-import { ArgsType, Field, ObjectType } from '@nestjs/graphql'
+import { ArgsType, Field } from '@nestjs/graphql'
 
 @ArgsType()
 export class SendCodeRequest {
-  @Field()
+  @Field(() => String)
   email: string
-}
-
-@ObjectType()
-export class SendCodeResponse {
-  @Field()
-  ok: boolean
-
-  @Field()
-  message?: string
 }

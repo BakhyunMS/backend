@@ -5,20 +5,12 @@ import { ConfigService } from '@nestjs/config'
 
 import prisma from '../client'
 import { emailFormat } from '../constant'
-import { JoinResponse } from './models/join.models'
-import { SendCodeResponse } from './models/sendCode.models'
-import { VerifyCodeResponse } from './models/verifyCode.models'
-
+import { Response } from 'src/types'
 @Injectable()
 export class UsersService {
   constructor(private configService: ConfigService) {}
 
-  async join(
-    email: string,
-    password: string,
-    name: string,
-    studentId: string
-  ): Promise<JoinResponse> {
+  async join(email: string, password: string, name: string, studentId: string): Promise<Response> {
     const existingUser = await prisma.user.findFirst({
       select: {
         id: true
@@ -49,7 +41,7 @@ export class UsersService {
     }
   }
 
-  async sendCode(email: string): Promise<SendCodeResponse> {
+  async sendCode(email: string): Promise<Response> {
     const now = new Date(Date.now())
     let code = ''
 
@@ -97,7 +89,7 @@ export class UsersService {
     return { ok: true, message: '이메일을 성공적으로 전송하였습니다.' }
   }
 
-  async verifyCode(email: string, code: string): Promise<VerifyCodeResponse> {
+  async verifyCode(email: string, code: string): Promise<Response> {
     const now = new Date(Date.now())
     const isCorrect = await prisma.verifiedEmails.findFirst({
       where: {

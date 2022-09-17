@@ -1,15 +1,22 @@
 import prisma from 'src/client'
 
-import { BoardType } from '@prisma/client'
 import { Injectable } from '@nestjs/common'
 import { GetBoardPageResponse } from './models/getBoardPage.model'
 import { GetPostResponse } from './models/getPost.model'
-import { Response } from 'types/global'
-import { UpdatePostData } from './models/updatePost.model'
+import { Response } from '../types'
+import { FindPostResponse } from './models/findPost.model'
 
 @Injectable()
 export class BoardService {
-  async getBoardPage(page: number, type: BoardType): Promise<GetBoardPageResponse> {
+  async getBoardPage(page: number, type: string): Promise<GetBoardPageResponse> {
+    if (
+      !(type === 'Rights') &&
+      !(type === 'Sports') &&
+      !(type === 'Campaign') &&
+      !(type === 'General') &&
+      !(type === 'Main')
+    )
+      return { ok: false, message: '서버 내부의 오류가 발생하였습니다.' }
     const data = await prisma.board.findMany({
       skip: (page - 1) * 10,
       take: 10,
@@ -17,7 +24,7 @@ export class BoardService {
         type
       }
     })
-    if (!data) return { ok: false, message: '서버 내부에 오류가 발생하였습니다.', data: [] }
+    if (!data) return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
     else if (data.length === 0) return { ok: true, data: [] }
     else return { ok: true, data }
   }
@@ -32,7 +39,7 @@ export class BoardService {
     else return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
   }
 
-  async findPostByTitle(title: string) {
+  async findPost(title: string): Promise<FindPostResponse> {
     const data = await prisma.board.findMany({
       where: {
         title: {
@@ -40,7 +47,7 @@ export class BoardService {
         }
       }
     })
-    if (!data) return { ok: false, message: '서버 내부에 오류가 발생하였습니다.', data: [] }
+    if (!data) return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
     else if (data.length === 0) return { ok: true, data: [] }
     else return { ok: true, data }
   }
@@ -49,8 +56,16 @@ export class BoardService {
     title: string,
     content: string,
     authorId: number,
-    type: BoardType
+    type: string
   ): Promise<Response> {
+    if (
+      !(type === 'Rights') &&
+      !(type === 'Sports') &&
+      !(type === 'Campaign') &&
+      !(type === 'General') &&
+      !(type === 'Main')
+    )
+      return { ok: false, message: '서버 내부의 오류가 발생하였습니다.' }
     const data = await prisma.board.create({
       data: {
         title,
@@ -63,15 +78,15 @@ export class BoardService {
     else return { ok: true, message: '글이 성공적으로 등록되었습니다.' }
   }
 
-  async updatePost(id: number, updateData: UpdatePostData): Promise<Response> {
-    if (!updateData.title && !updateData.content)
-      return { ok: false, message: '변경 사항이 없습니다.' }
+  async updatePost(id: number, title: string, content: string): Promise<Response> {
+    if (!title && !content) return { ok: false, message: '변경 사항이 없습니다.' }
     const data = await prisma.board.update({
       where: {
         id
       },
       data: {
-        ...updateData
+        title,
+        content
       }
     })
     if (!data.id) return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }

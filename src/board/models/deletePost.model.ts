@@ -1,7 +1,7 @@
-import { ArgsType, Field } from '@nestjs/graphql'
+import { ArgsType, Field, ID } from '@nestjs/graphql'
 
 @ArgsType()
 export class DeletePostRequest {
-  @Field()
+  @Field(() => ID)
   id: number
 }

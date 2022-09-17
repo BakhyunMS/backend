@@ -1,9 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
-import { Response } from 'types/global'
+import { Response } from '../types'
 import { BoardService } from './board.service'
 import { CreatePostRequest } from './models/createPost.model'
 import { DeletePostRequest } from './models/deletePost.model'
-import { FindPostByTitleRequest, FindPostByTitleResponse } from './models/findPostByTitle.model'
+import { FindPostRequest, FindPostResponse } from './models/findPost.model'
 import { GetBoardPageRequest, GetBoardPageResponse } from './models/getBoardPage.model'
 import { GetPostRequest, GetPostResponse } from './models/getPost.model'
 import { UpdatePostRequest } from './models/updatePost.model'
@@ -29,9 +29,9 @@ export class BoardResolver {
     return this.boardService.deletePost(id)
   }
 
-  @Mutation(() => FindPostByTitleResponse)
-  async findPost(@Args() { title }: FindPostByTitleRequest): Promise<FindPostByTitleResponse> {
-    return this.boardService.findPostByTitle(title)
+  @Mutation(() => FindPostResponse)
+  async findPost(@Args() { title }: FindPostRequest): Promise<FindPostResponse> {
+    return this.boardService.findPost(title)
   }
 
   @Mutation(() => GetBoardPageResponse)
@@ -45,7 +45,7 @@ export class BoardResolver {
   }
 
   @Mutation(() => Response)
-  async updatePost(@Args() { id, updateData }: UpdatePostRequest): Promise<Response> {
-    return this.boardService.updatePost(id, updateData)
+  async updatePost(@Args() { id, title, content }: UpdatePostRequest): Promise<Response> {
+    return this.boardService.updatePost(id, title, content)
   }
 }

@@ -1,25 +1,16 @@
-import { ArgsType, Field, ObjectType } from '@nestjs/graphql'
+import { ArgsType, Field } from '@nestjs/graphql'
 
 @ArgsType()
 export class JoinRequest {
-  @Field()
+  @Field(() => String)
   email: string
 
-  @Field()
+  @Field(() => String)
   password: string
 
-  @Field()
+  @Field(() => String)
   name: string
 
-  @Field()
+  @Field(() => String)
   studentId: string
-}
-
-@ObjectType()
-export class JoinResponse {
-  @Field()
-  ok: boolean
-
-  @Field()
-  message?: string
 }

@@ -1,17 +1,16 @@
 import { ArgsType, Field } from '@nestjs/graphql'
-import { BoardType } from '@prisma/client'
 
 @ArgsType()
 export class CreatePostRequest {
-  @Field()
+  @Field(() => String)
   title: string
 
-  @Field()
+  @Field(() => String)
   content: string
 
-  @Field()
+  @Field(() => Number)
   authorId: number
 
-  @Field()
-  type: BoardType
+  @Field(() => String)
+  type: string
 }

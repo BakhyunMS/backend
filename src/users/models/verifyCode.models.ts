@@ -1,19 +1,10 @@
-import { ArgsType, Field, ObjectType } from '@nestjs/graphql'
+import { ArgsType, Field } from '@nestjs/graphql'
 
 @ArgsType()
 export class VerifyCodeRequest {
-  @Field()
+  @Field(() => String)
   email: string
 
-  @Field()
+  @Field(() => String)
   code: string
-}
-
-@ObjectType()
-export class VerifyCodeResponse {
-  @Field()
-  ok: boolean
-
-  @Field()
-  message?: string
 }

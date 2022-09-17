@@ -1,15 +1,14 @@
-import { ArgsType, Field, ObjectType } from '@nestjs/graphql'
-import { Board } from '@prisma/client'
-import { Response } from 'types/global'
+import { ArgsType, Field, ID, ObjectType } from '@nestjs/graphql'
+import { Board, Response } from '../../types'
 
 @ArgsType()
 export class GetPostRequest {
-  @Field()
+  @Field(() => ID)
   id: number
 }
 
 @ObjectType()
 export class GetPostResponse extends Response {
-  @Field()
+  @Field(() => [Board], { nullable: true })
   data?: Board
 }
