@@ -1,4 +1,6 @@
+import { UseGuards } from '@nestjs/common'
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { AuthGuard } from '../auth/auth.guard'
 import { Response } from '../types'
 import { BoardService } from './board.service'
 import { CreatePostRequest } from './models/createPost.model'
@@ -12,11 +14,22 @@ import { UpdatePostRequest } from './models/updatePost.model'
 export class BoardResolver {
   constructor(private boardService: BoardService) {}
 
-  @Query(() => String)
-  sayHello(): string {
-    return 'Hello World'
+  @Query(() => GetPostResponse)
+  async getPost(@Args() { id }: GetPostRequest): Promise<GetPostResponse> {
+    return this.boardService.getPost(id)
   }
 
+  @Query(() => FindPostResponse)
+  async findPost(@Args() { title }: FindPostRequest): Promise<FindPostResponse> {
+    return this.boardService.findPost(title)
+  }
+
+  @Query(() => GetBoardPageResponse)
+  async getBoardPage(@Args() { page, type }: GetBoardPageRequest): Promise<GetBoardPageResponse> {
+    return this.boardService.getBoardPage(page, type)
+  }
+
+  @UseGuards(AuthGuard)
   @Mutation(() => Response)
   async createPost(
     @Args() { title, content, authorId, type }: CreatePostRequest
@@ -24,28 +37,15 @@ export class BoardResolver {
     return this.boardService.createPost(title, content, authorId, type)
   }
 
-  @Mutation(() => Response)
-  async deletePost(@Args() { id }: DeletePostRequest): Promise<Response> {
-    return this.boardService.deletePost(id)
-  }
-
-  @Mutation(() => FindPostResponse)
-  async findPost(@Args() { title }: FindPostRequest): Promise<FindPostResponse> {
-    return this.boardService.findPost(title)
-  }
-
-  @Mutation(() => GetBoardPageResponse)
-  async getBoardPage(@Args() { page, type }: GetBoardPageRequest): Promise<GetBoardPageResponse> {
-    return this.boardService.getBoardPage(page, type)
-  }
-
-  @Mutation(() => GetPostResponse)
-  async getPost(@Args() { id }: GetPostRequest): Promise<GetPostResponse> {
-    return this.boardService.getPost(id)
-  }
-
+  @UseGuards(AuthGuard)
   @Mutation(() => Response)
   async updatePost(@Args() { id, title, content }: UpdatePostRequest): Promise<Response> {
     return this.boardService.updatePost(id, title, content)
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Response)
+  async deletePost(@Args() { id }: DeletePostRequest): Promise<Response> {
+    return this.boardService.deletePost(id)
   }
 }
