@@ -9,6 +9,6 @@ export class GetPostRequest {
 
 @ObjectType()
 export class GetPostResponse extends Response {
-  @Field(() => [Board], { nullable: true })
+  @Field(() => Board, { nullable: true })
   data?: Board
 }

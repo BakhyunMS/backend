@@ -6,9 +6,20 @@ import { ConfigService } from '@nestjs/config'
 import prisma from '../client'
 import { emailFormat } from '../constant'
 import { Response } from 'src/types'
+import { GetProfileResponse } from './models/getProfile.models'
 @Injectable()
 export class UsersService {
   constructor(private configService: ConfigService) {}
+
+  async getProfile(id: number): Promise<GetProfileResponse> {
+    const data = await prisma.user.findFirst({
+      where: {
+        id
+      }
+    })
+    if (data.id) return { ok: true, data }
+    else return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
+  }
 
   async join(email: string, password: string, name: string, studentId: string): Promise<Response> {
     const existingUser = await prisma.user.findFirst({
