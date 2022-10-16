@@ -15,7 +15,7 @@ export class UsersResolver {
     return this.usersService.getProfile(id)
   }
 
-  @Query(() => Response)
+  @Mutation(() => Response)
   async sendCode(@Args() { email }: SendCodeRequest): Promise<Response> {
     return this.usersService.sendCode(email)
   }
