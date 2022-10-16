@@ -33,8 +33,6 @@ export class UsersService {
 
     if (existingUser) return { ok: false, message: '존재하는 이메일입니다.' }
     if (!emailFormat.test(email)) return { ok: false, message: '이메일 형식이 잘못되었습니다.' }
-    if (email.substring(email.indexOf('@')) !== 'bakhyun.ms.kr')
-      return { ok: false, message: '백현중학교 이메일이 아닙니다.' }
 
     const data = await prisma.user.create({
       data: {
