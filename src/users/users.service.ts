@@ -17,7 +17,7 @@ export class UsersService {
         id
       }
     })
-    if (data.id) return { ok: true, data }
+    if (data) return { ok: true, data }
     else return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
   }
 
@@ -31,7 +31,7 @@ export class UsersService {
       }
     })
 
-    if (existingUser.id) return { ok: false, message: '존재하는 이메일입니다.' }
+    if (existingUser) return { ok: false, message: '존재하는 이메일입니다.' }
     if (!emailFormat.test(email)) return { ok: false, message: '이메일 형식이 잘못되었습니다.' }
     if (email.substring(email.indexOf('@')) !== 'bakhyun.ms.kr')
       return { ok: false, message: '백현중학교 이메일이 아닙니다.' }
@@ -45,7 +45,7 @@ export class UsersService {
       }
     })
 
-    if (data.id) {
+    if (data) {
       return { ok: true, message: '회원 가입에 성공하였습니다.' }
     } else {
       return { ok: false, message: '내부 오류로 인해 회원가입에 실패하였습니다.' }

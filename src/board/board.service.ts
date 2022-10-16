@@ -35,7 +35,7 @@ export class BoardService {
         id
       }
     })
-    if (data.id) return { ok: true, data }
+    if (data) return { ok: true, data }
     else return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
   }
 
@@ -74,7 +74,7 @@ export class BoardService {
         type
       }
     })
-    if (!data.id) return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
+    if (!data) return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
     else return { ok: true, message: '글이 성공적으로 등록되었습니다.' }
   }
 
@@ -89,7 +89,7 @@ export class BoardService {
         content
       }
     })
-    if (!data.id) return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
+    if (!data) return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
     else return { ok: true, message: '글이 성공적으로 수정되었습니다.' }
   }
 
@@ -99,7 +99,7 @@ export class BoardService {
         id
       }
     })
-    if (!data.id) return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
+    if (!data) return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
     else return { ok: true, message: '글이 성공적으로 삭제되었습니다.' }
   }
 }

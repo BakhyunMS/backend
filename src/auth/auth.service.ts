@@ -23,8 +23,8 @@ export class AuthService {
       }
     })
 
-    if (!existingUser.id) return { ok: false, message: '존재하지 않는 이메일입니다.' }
-    if (!user.id) return { ok: false, message: '비밀번호가 일치하지 않습니다.' }
+    if (!existingUser) return { ok: false, message: '존재하지 않는 이메일입니다.' }
+    if (!user) return { ok: false, message: '비밀번호가 일치하지 않습니다.' }
 
     const token = await this.jwtService.sign({ id: user.id }, this.configService.get('JWT_SECRET'))
 
