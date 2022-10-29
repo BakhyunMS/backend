@@ -11,17 +11,9 @@ import { GetProfileResponse } from './models/getProfile.models'
 export class UsersService {
   constructor(private configService: ConfigService) {}
 
-  async getProfile(id: number): Promise<GetProfileResponse> {
-    const data = await prisma.user.findFirst({
-      where: {
-        id
-      }
-    })
-    if (data) return { ok: true, data }
-    else return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
-  }
+  async checkUser(email: string): Promise<Response> {
+    if (!emailFormat.test(email)) return { ok: false, message: '이메일 형식이 잘못되었습니다.' }
 
-  async join(email: string, password: string, name: string, studentId: string): Promise<Response> {
     const existingUser = await prisma.user.findFirst({
       select: {
         id: true
@@ -32,22 +24,17 @@ export class UsersService {
     })
 
     if (existingUser) return { ok: false, message: '존재하는 이메일입니다.' }
-    if (!emailFormat.test(email)) return { ok: false, message: '이메일 형식이 잘못되었습니다.' }
+    else return { ok: true }
+  }
 
-    const data = await prisma.user.create({
-      data: {
-        email,
-        password: await bcrypt.hash(password, 10),
-        name,
-        studentId
+  async getProfile(id: number): Promise<GetProfileResponse> {
+    const data = await prisma.user.findFirst({
+      where: {
+        id
       }
     })
-
-    if (data) {
-      return { ok: true, message: '회원 가입에 성공하였습니다.' }
-    } else {
-      return { ok: false, message: '내부 오류로 인해 회원가입에 실패하였습니다.' }
-    }
+    if (data) return { ok: true, data }
+    else return { ok: false, message: '서버 내부에 오류가 발생하였습니다.' }
   }
 
   async sendCode(email: string): Promise<Response> {
@@ -98,7 +85,13 @@ export class UsersService {
     return { ok: true, message: '이메일을 성공적으로 전송하였습니다.' }
   }
 
-  async verifyCode(email: string, code: string): Promise<Response> {
+  async verifyCode(
+    email: string,
+    code: string,
+    password: string,
+    name: string,
+    studentId: string
+  ): Promise<Response> {
     const now = new Date(Date.now())
     const isCorrect = await prisma.verifiedEmails.findFirst({
       where: {
@@ -112,6 +105,19 @@ export class UsersService {
     if (isCorrect.expiresAt.getTime() < now.getTime())
       return { ok: false, message: '코드가 만료되었습니다.' }
 
-    return { ok: true, message: '회원가입에 성공하였습니다.' }
+    const data = await prisma.user.create({
+      data: {
+        email,
+        password: await bcrypt.hash(password, 10),
+        name,
+        studentId
+      }
+    })
+
+    if (data) {
+      return { ok: true, message: '회원가입에 성공하였습니다.' }
+    } else {
+      return { ok: false, message: '내부 오류로 인해 회원가입에 실패하였습니다.' }
+    }
   }
 }

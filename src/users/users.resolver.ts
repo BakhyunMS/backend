@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { Response } from 'src/types'
 import { GetProfileRequest } from './models/getProfile.models'
-import { JoinRequest } from './models/join.models'
+import { CheckUserRequest } from './models/checkUser.models'
 import { SendCodeRequest } from './models/sendCode.models'
 import { VerifyCodeRequest } from './models/verifyCode.models'
 import { UsersService } from './users.service'
@@ -21,12 +21,15 @@ export class UsersResolver {
   }
 
   @Mutation(() => Response)
-  async join(@Args() { email, password, name, studentId }: JoinRequest): Promise<Response> {
-    return this.usersService.join(email, password, name, studentId)
+  async checkUser(@Args() { email }: CheckUserRequest): Promise<Response> {
+    return this.usersService.checkUser(email)
   }
 
   @Mutation(() => Response)
-  async verifyCode(@Args() { email, code }: VerifyCodeRequest): Promise<Response> {
-    return this.usersService.verifyCode(email, code)
+  async verifyCode(
+    @Args()
+    { email, code, password, name, studentId }: VerifyCodeRequest
+  ): Promise<Response> {
+    return this.usersService.verifyCode(email, code, password, name, studentId)
   }
 }

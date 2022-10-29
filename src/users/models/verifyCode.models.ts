@@ -7,4 +7,13 @@ export class VerifyCodeRequest {
 
   @Field(() => String)
   code: string
+
+  @Field(() => String)
+  password: string
+
+  @Field(() => String)
+  name: string
+
+  @Field(() => String)
+  studentId: string
 }
