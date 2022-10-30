@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import prisma from '../client'
-import { emailFormat } from '../constant'
 import { Response } from 'src/types'
 import { GetProfileResponse } from './models/getProfile.models'
 @Injectable()
@@ -12,8 +11,6 @@ export class UsersService {
   constructor(private configService: ConfigService) {}
 
   async checkUser(email: string): Promise<Response> {
-    if (!emailFormat.test(email)) return { ok: false, message: '이메일 형식이 잘못되었습니다.' }
-
     const existingUser = await prisma.user.findFirst({
       select: {
         id: true
@@ -22,9 +19,8 @@ export class UsersService {
         email
       }
     })
-
-    if (existingUser) return { ok: false, message: '존재하는 이메일입니다.' }
-    else return { ok: true }
+    if (existingUser.id) return { ok: true }
+    else return { ok: false }
   }
 
   async getProfile(id: number): Promise<GetProfileResponse> {
