@@ -10,12 +10,17 @@ import { UsersResolver } from './users/users.resolver'
 import { UsersService } from './users/users.service'
 import { BoardResolver } from './board/board.resolver'
 import { BoardService } from './board/board.service'
+import { ThrottlerModule } from '@nestjs/throttler'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true
+    }),
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 10
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
