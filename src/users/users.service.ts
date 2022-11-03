@@ -19,7 +19,7 @@ export class UsersService {
         email
       }
     })
-    if (existingUser.id) return { ok: true }
+    if (existingUser) return { ok: true }
     else return { ok: false }
   }
 
