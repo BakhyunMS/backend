@@ -22,7 +22,7 @@ export class AuthService {
 
     if (!isPasswordCorrect) return { ok: false, message: '비밀번호가 일치하지 않습니다.' }
 
-    const token = await this.jwtService.sign({ id: user.id }, this.configService.get('JWT_SECRET'))
+    const token = await this.jwtService.sign({ id: user.id })
 
     return { ok: true, message: '로그인 되었습니다.', token }
   }
